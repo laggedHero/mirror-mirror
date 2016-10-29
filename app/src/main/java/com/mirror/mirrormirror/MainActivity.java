@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.cameraview.CameraView;
@@ -41,6 +42,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private CameraView cameraView;
     private TextView listeningWarning;
     private TextView feedbackMessage;
+    private ProgressBar progressBar;
 
     private TextView debugMessage;
     private TextView debugWarning;
@@ -171,6 +173,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         cameraView = (CameraView) findViewById(R.id.camera);
         listeningWarning = (TextView) findViewById(R.id.listeningWarning);
         feedbackMessage = (TextView) findViewById(R.id.feedbackMessage);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         debugMessage = (TextView) findViewById(R.id.debugMessage);
         debugWarning = (TextView) findViewById(R.id.debugWarning);
@@ -312,6 +315,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void callItForReal(byte[] photoData) {
+        progressBar.setVisibility(View.VISIBLE);
+
         MirrorService mirrorService = MirrorMirrorService.getService();
 
         RequestBody requestFile =
@@ -323,12 +328,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         mirrorService.sendPhoto(photo).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                //
+                progressBar.setVisibility(View.GONE);
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-                //
+                progressBar.setVisibility(View.GONE);
             }
         });
     }

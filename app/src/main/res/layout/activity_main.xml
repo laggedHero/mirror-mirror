@@ -76,5 +76,14 @@
             android:layout_height="200dp"
             android:visibility="gone" />
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:indeterminate="true"
+            android:visibility="gone" />
+
     </RelativeLayout>
 </FrameLayout>
