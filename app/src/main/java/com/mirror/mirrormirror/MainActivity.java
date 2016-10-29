@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private CameraView cameraView;
     private TextView listeningWarning;
+    private TextView feedbackMessage;
+
     private TextView debugMessage;
     private TextView debugWarning;
     private ImageView debugImage;
@@ -168,11 +170,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         cameraView = (CameraView) findViewById(R.id.camera);
         listeningWarning = (TextView) findViewById(R.id.listeningWarning);
+        feedbackMessage = (TextView) findViewById(R.id.feedbackMessage);
+
         debugMessage = (TextView) findViewById(R.id.debugMessage);
         debugWarning = (TextView) findViewById(R.id.debugWarning);
         debugImage = (ImageView) findViewById(R.id.debugImage);
 
         cameraView.addCallback(cameraCallback);
+
+        prepFeedbackMessage();
     }
 
     @Override
@@ -273,6 +279,36 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         isAboutToShow = false;
 
         textToSpeech.speak("You're looking great", TextToSpeech.QUEUE_FLUSH, null, "mirror-talk-back");
+
+        feedbackMessage.setText("You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great");
+
+        feedbackMessage.animate()
+                .alpha(1f)
+                .translationYBy(-750)
+                .scaleX(1.0f)
+                .scaleY(1.0f)
+                .setDuration(300);
+
+        feedbackMessage.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                feedbackMessage.animate()
+                        .alpha(0f)
+                        .translationYBy(750)
+                        .scaleX(0.5f)
+                        .scaleY(0.5f)
+                        .setDuration(300);
+            }
+        }, 3300);
+    }
+
+    private void prepFeedbackMessage() {
+        feedbackMessage.animate()
+                .alpha(0f)
+                .translationYBy(750)
+                .scaleX(0.5f)
+                .scaleY(0.5f)
+                .setDuration(300);
     }
 
     private void callItForReal(byte[] photoData) {
