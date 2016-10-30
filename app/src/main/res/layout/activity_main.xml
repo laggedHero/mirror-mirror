@@ -48,6 +48,18 @@
             android:textColor="@android:color/white"
             android:textSize="22sp" />
 
+        <com.mirror.mirrormirror.SecretTextView
+            android:id="@+id/feedbackMessageOther"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="#80000000"
+            android:gravity="center"
+            android:padding="@dimen/activity_horizontal_margin"
+            android:textColor="@android:color/white"
+            android:textSize="22sp"
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/debugWarning"
             android:layout_width="wrap_content"

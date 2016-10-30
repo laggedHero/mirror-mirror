@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private CameraView cameraView;
     private TextView listeningWarning;
     private TextView feedbackMessageView;
+    private SecretTextView feedbackMessageOtherView;
     private ProgressBar progressBar;
 
     private TextView debugMessage;
@@ -174,11 +175,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         cameraView = (CameraView) findViewById(R.id.camera);
         listeningWarning = (TextView) findViewById(R.id.listeningWarning);
         feedbackMessageView = (TextView) findViewById(R.id.feedbackMessage);
+        feedbackMessageOtherView = (SecretTextView) findViewById(R.id.feedbackMessageOther);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         debugMessage = (TextView) findViewById(R.id.debugMessage);
         debugWarning = (TextView) findViewById(R.id.debugWarning);
         debugImage = (ImageView) findViewById(R.id.debugImage);
+
+        listeningWarning.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                feedbackMessageOtherView.setText("You're looking great You're looking great You're looking great");
+                feedbackMessageOtherView.toggle();
+            }
+        });
 
         cameraView.addCallback(cameraCallback);
 
