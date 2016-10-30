@@ -42,8 +42,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private CameraView cameraView;
     private TextView listeningWarning;
-    private TextView feedbackMessageView;
-    private SecretTextView feedbackMessageOtherView;
+    private SecretTextView feedbackMessageView;
     private ProgressBar progressBar;
 
     private TextView debugMessage;
@@ -174,25 +173,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         cameraView = (CameraView) findViewById(R.id.camera);
         listeningWarning = (TextView) findViewById(R.id.listeningWarning);
-        feedbackMessageView = (TextView) findViewById(R.id.feedbackMessage);
-        feedbackMessageOtherView = (SecretTextView) findViewById(R.id.feedbackMessageOther);
+        feedbackMessageView = (SecretTextView) findViewById(R.id.feedbackMessage);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         debugMessage = (TextView) findViewById(R.id.debugMessage);
         debugWarning = (TextView) findViewById(R.id.debugWarning);
         debugImage = (ImageView) findViewById(R.id.debugImage);
 
-        listeningWarning.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                feedbackMessageOtherView.setText("You're looking great You're looking great You're looking great");
-                feedbackMessageOtherView.toggle();
-            }
-        });
-
         cameraView.addCallback(cameraCallback);
-
-        prepFeedbackMessage();
     }
 
     @Override
@@ -295,34 +283,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         textToSpeech.speak("You're looking great", TextToSpeech.QUEUE_FLUSH, null, "mirror-talk-back");
 
         feedbackMessageView.setText("You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great");
-
-        feedbackMessageView.animate()
-                .alpha(1f)
-                .translationYBy(-750)
-                .scaleX(1.0f)
-                .scaleY(1.0f)
-                .setDuration(300);
-
-        feedbackMessageView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                feedbackMessageView.animate()
-                        .alpha(0f)
-                        .translationYBy(750)
-                        .scaleX(0.5f)
-                        .scaleY(0.5f)
-                        .setDuration(300);
-            }
-        }, 3300);
-    }
-
-    private void prepFeedbackMessage() {
-        feedbackMessageView.animate()
-                .alpha(0f)
-                .translationYBy(750)
-                .scaleX(0.5f)
-                .scaleY(0.5f)
-                .setDuration(300);
+        feedbackMessageView.showAndHide();
     }
 
     private void callItForReal(byte[] photoData) {
@@ -356,24 +317,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         textToSpeech.speak(feedbackMessage.message, TextToSpeech.QUEUE_FLUSH, null, "mirror-talk-back");
 
         feedbackMessageView.setText(feedbackMessage.message);
-
-        feedbackMessageView.animate()
-                .alpha(1f)
-                .translationYBy(-750)
-                .scaleX(1.0f)
-                .scaleY(1.0f)
-                .setDuration(300);
-
-        feedbackMessageView.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                feedbackMessageView.animate()
-                        .alpha(0f)
-                        .translationYBy(750)
-                        .scaleX(0.5f)
-                        .scaleY(0.5f)
-                        .setDuration(300);
-            }
-        }, 3300);
+        feedbackMessageView.show();
     }
 }

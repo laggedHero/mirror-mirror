@@ -23,6 +23,8 @@ public class SecretTextView extends TextView {
     private boolean mIsTextResetting = false;
     private int mDuration = 2500;
 
+    private boolean shouldHide = false;
+
     ValueAnimator animator;
     ValueAnimator.AnimatorUpdateListener listener = new ValueAnimator.AnimatorUpdateListener() {
         @Override
@@ -56,6 +58,15 @@ public class SecretTextView extends TextView {
                 if (!mIsVisible) {
                     setVisibility(GONE);
                 }
+                if (shouldHide) {
+                    shouldHide = false;
+                    postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            hide();
+                        }
+                    }, 3000);
+                }
             }
 
             @Override
@@ -75,6 +86,13 @@ public class SecretTextView extends TextView {
         } else {
             show();
         }
+    }
+
+    public void showAndHide() {
+        shouldHide = true;
+        mIsVisible = true;
+        setVisibility(VISIBLE);
+        animator.start();
     }
 
     public void show() {
