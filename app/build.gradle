@@ -37,6 +37,9 @@ dependencies {
     compile "com.squareup.retrofit2:converter-moshi:$retrofitVersion"
     compile "com.squareup.moshi:moshi:$moshiVersion"
 
+    compile 'com.facebook.stetho:stetho:1.4.1'
+    compile 'com.facebook.stetho:stetho-okhttp3:1.4.1'
+
     compile project(path: ':library')
 
     testCompile 'junit:junit:4.12'
