@@ -9,6 +9,7 @@ import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.UtteranceProgressListener;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -159,6 +160,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     };
 
+    private UtteranceProgressListener utteranceProgressListener = new UtteranceProgressListener() {
+        @Override
+        public void onStart(String s) {
+        }
+
+        @Override
+        public void onDone(String s) {
+            startSpeechRecognition();
+        }
+
+        @Override
+        public void onError(String s) {
+        }
+    };
+
     private CameraView.Callback cameraCallback = new CameraView.Callback() {
         @Override
         public void onPictureTaken(CameraView cameraView, byte[] data) {
@@ -269,6 +285,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     return;
                 }
                 textToSpeech.setSpeechRate(0.75f);
+//                textToSpeech.setOnUtteranceProgressListener(utteranceProgressListener);
+                textToSpeech.setOnUtteranceCompletedListener(new TextToSpeech.OnUtteranceCompletedListener() {
+                    @Override
+                    public void onUtteranceCompleted(String s) {
+                        startTextToSpeech();
+                    }
+                });
+
                 startSpeechRecognition();
             }
         });
@@ -294,17 +318,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    private void callServiceButNotReally(byte[] photoData) {
-        Bitmap bMap = BitmapFactory.decodeByteArray(photoData, 0, photoData.length);
-        debugImage.setImageBitmap(bMap);
-        isAboutToShow = false;
-
-        textToSpeech.speak("You're looking great", TextToSpeech.QUEUE_FLUSH, null, "mirror-talk-back");
-
-        feedbackMessageView.setText("You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great");
-        feedbackMessageView.showAndHide();
-    }
-
     private void callService(byte[] photoData) {
         progressBar.setVisibility(View.VISIBLE);
 
@@ -322,6 +335,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
                     giveFeedback(response.body());
+                    isAboutToShow = false;
+                    return;
                 }
                 isAboutToShow = false;
                 startSpeechRecognition();

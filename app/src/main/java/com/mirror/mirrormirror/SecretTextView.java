@@ -21,7 +21,7 @@ public class SecretTextView extends TextView {
     private MutableForegroundColorSpan[] mSpans;
     private boolean mIsVisible;
     private boolean mIsTextResetting = false;
-    private int mDuration = 5000;
+    private int mDuration = 2000;
 
     private boolean shouldHide = false;
 
@@ -67,7 +67,7 @@ public class SecretTextView extends TextView {
                         public void run() {
                             hide();
                         }
-                    }, 3000);
+                    }, 5000);
                 }
             }
 
