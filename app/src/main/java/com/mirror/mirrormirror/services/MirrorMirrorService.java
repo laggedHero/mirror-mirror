@@ -9,7 +9,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory;
 
 public class MirrorMirrorService {
 
-    private static final String ENDPOINT = "http://www.google.com";
+    private static final String ENDPOINT = "https://hackathon-mirrormirror.herokuapp.com";
 
     private static MirrorService mirrorService;
 

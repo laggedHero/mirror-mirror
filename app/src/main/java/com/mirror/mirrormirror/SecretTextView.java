@@ -21,7 +21,7 @@ public class SecretTextView extends TextView {
     private MutableForegroundColorSpan[] mSpans;
     private boolean mIsVisible;
     private boolean mIsTextResetting = false;
-    private int mDuration = 2500;
+    private int mDuration = 2000;
 
     private boolean shouldHide = false;
 
@@ -56,7 +56,9 @@ public class SecretTextView extends TextView {
             @Override
             public void onAnimationEnd(Animator animator) {
                 if (!mIsVisible) {
-                    setVisibility(GONE);
+                    animate()
+                            .alpha(0.0f)
+                            .setDuration(250);
                 }
                 if (shouldHide) {
                     shouldHide = false;
@@ -91,14 +93,28 @@ public class SecretTextView extends TextView {
     public void showAndHide() {
         shouldHide = true;
         mIsVisible = true;
-        setVisibility(VISIBLE);
-        animator.start();
+        animate()
+                .alpha(1.0f)
+                .setDuration(250)
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        animator.start();
+                    }
+                });
     }
 
     public void show() {
         mIsVisible = true;
-        setVisibility(VISIBLE);
-        animator.start();
+        animate()
+                .alpha(1.0f)
+                .setDuration(250)
+                .withEndAction(new Runnable() {
+                    @Override
+                    public void run() {
+                        animator.start();
+                    }
+                });
     }
 
     public void hide() {

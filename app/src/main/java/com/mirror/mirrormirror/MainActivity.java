@@ -127,9 +127,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         @Override
         public void onResults(Bundle results) {
-            // Restart new dictation cycle
-            startSpeechRecognition();
-
             // Return to the container activity dictation results
             final List<String> stringList = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             if (stringList != null) {
@@ -143,6 +140,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                 checkKeywordAndDispatchCall(stringList);
             }
+
+            if (isAboutToShow) {
+                listeningWarning.setVisibility(View.GONE);
+                return;
+            }
+
+            // Restart new dictation cycle
+            startSpeechRecognition();
         }
 
         @Override
@@ -275,7 +280,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         }
     }
 
-    private void callService(byte[] photoData) {
+    private void callServiceButNotReally(byte[] photoData) {
         Bitmap bMap = BitmapFactory.decodeByteArray(photoData, 0, photoData.length);
         debugImage.setImageBitmap(bMap);
         isAboutToShow = false;
@@ -286,7 +291,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         feedbackMessageView.showAndHide();
     }
 
-    private void callItForReal(byte[] photoData) {
+    private void callService(byte[] photoData) {
         progressBar.setVisibility(View.VISIBLE);
 
         MirrorService mirrorService = MirrorMirrorService.getService();
@@ -295,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 RequestBody.create(MediaType.parse("multipart/form-data"), photoData);
 
         MultipartBody.Part photo =
-                MultipartBody.Part.createFormData("picture", " picture", requestFile);
+                MultipartBody.Part.createFormData("data", " picture", requestFile);
 
         mirrorService.sendPhoto(photo).enqueue(new Callback<FeedbackMessage>() {
             @Override
@@ -304,19 +309,28 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 if (response.isSuccessful()) {
                     giveFeedback(response.body());
                 }
+                isAboutToShow = false;
+                startSpeechRecognition();
             }
 
             @Override
             public void onFailure(Call<FeedbackMessage> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
+                isAboutToShow = false;
+                startSpeechRecognition();
             }
         });
     }
 
-    private void giveFeedback(FeedbackMessage feedbackMessage) {
-        textToSpeech.speak(feedbackMessage.message, TextToSpeech.QUEUE_FLUSH, null, "mirror-talk-back");
+    private void giveFeedback(final FeedbackMessage feedbackMessage) {
+        feedbackMessageView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                textToSpeech.speak(feedbackMessage.message, TextToSpeech.QUEUE_FLUSH, null, "mirror-talk-back");
+            }
+        }, 500);
 
         feedbackMessageView.setText(feedbackMessage.message);
-        feedbackMessageView.show();
+        feedbackMessageView.showAndHide();
     }
 }
