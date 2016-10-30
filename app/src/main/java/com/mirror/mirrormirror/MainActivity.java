@@ -331,7 +331,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             public void onResponse(Call<FeedbackMessage> call, Response<FeedbackMessage> response) {
                 progressBar.setVisibility(View.GONE);
                 if (response.isSuccessful()) {
-                    showFeedbackMessage(response.body());
+                    giveFeedback(response.body());
                 }
             }
 
@@ -342,7 +342,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         });
     }
 
-    private void showFeedbackMessage(FeedbackMessage feedbackMessage) {
+    private void giveFeedback(FeedbackMessage feedbackMessage) {
+        textToSpeech.speak(feedbackMessage.message, TextToSpeech.QUEUE_FLUSH, null, "mirror-talk-back");
+
         feedbackMessageView.setText(feedbackMessage.message);
 
         feedbackMessageView.animate()
