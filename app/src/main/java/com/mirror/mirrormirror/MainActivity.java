@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.google.android.cameraview.CameraView;
+import com.mirror.mirrormirror.services.FeedbackMessage;
 import com.mirror.mirrormirror.services.MirrorMirrorService;
 import com.mirror.mirrormirror.services.MirrorService;
 
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
     private CameraView cameraView;
     private TextView listeningWarning;
-    private TextView feedbackMessage;
+    private TextView feedbackMessageView;
     private ProgressBar progressBar;
 
     private TextView debugMessage;
@@ -172,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         cameraView = (CameraView) findViewById(R.id.camera);
         listeningWarning = (TextView) findViewById(R.id.listeningWarning);
-        feedbackMessage = (TextView) findViewById(R.id.feedbackMessage);
+        feedbackMessageView = (TextView) findViewById(R.id.feedbackMessage);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
         debugMessage = (TextView) findViewById(R.id.debugMessage);
@@ -283,19 +284,19 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         textToSpeech.speak("You're looking great", TextToSpeech.QUEUE_FLUSH, null, "mirror-talk-back");
 
-        feedbackMessage.setText("You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great");
+        feedbackMessageView.setText("You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great You're looking great");
 
-        feedbackMessage.animate()
+        feedbackMessageView.animate()
                 .alpha(1f)
                 .translationYBy(-750)
                 .scaleX(1.0f)
                 .scaleY(1.0f)
                 .setDuration(300);
 
-        feedbackMessage.postDelayed(new Runnable() {
+        feedbackMessageView.postDelayed(new Runnable() {
             @Override
             public void run() {
-                feedbackMessage.animate()
+                feedbackMessageView.animate()
                         .alpha(0f)
                         .translationYBy(750)
                         .scaleX(0.5f)
@@ -306,7 +307,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     }
 
     private void prepFeedbackMessage() {
-        feedbackMessage.animate()
+        feedbackMessageView.animate()
                 .alpha(0f)
                 .translationYBy(750)
                 .scaleX(0.5f)
@@ -325,16 +326,42 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         MultipartBody.Part photo =
                 MultipartBody.Part.createFormData("picture", " picture", requestFile);
 
-        mirrorService.sendPhoto(photo).enqueue(new Callback<String>() {
+        mirrorService.sendPhoto(photo).enqueue(new Callback<FeedbackMessage>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
+            public void onResponse(Call<FeedbackMessage> call, Response<FeedbackMessage> response) {
                 progressBar.setVisibility(View.GONE);
+                if (response.isSuccessful()) {
+                    showFeedbackMessage(response.body());
+                }
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<FeedbackMessage> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void showFeedbackMessage(FeedbackMessage feedbackMessage) {
+        feedbackMessageView.setText(feedbackMessage.message);
+
+        feedbackMessageView.animate()
+                .alpha(1f)
+                .translationYBy(-750)
+                .scaleX(1.0f)
+                .scaleY(1.0f)
+                .setDuration(300);
+
+        feedbackMessageView.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                feedbackMessageView.animate()
+                        .alpha(0f)
+                        .translationYBy(750)
+                        .scaleX(0.5f)
+                        .scaleY(0.5f)
+                        .setDuration(300);
+            }
+        }, 3300);
     }
 }

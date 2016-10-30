@@ -1,6 +1,7 @@
 package com.mirror.mirrormirror.services;
 
 import retrofit2.Retrofit;
+import retrofit2.converter.moshi.MoshiConverterFactory;
 
 /**
  * Created by laggedhero on 10/29/16.
@@ -15,7 +16,8 @@ public class MirrorMirrorService {
     public static MirrorService getService() {
         if (mirrorService == null) {
             Retrofit.Builder builder = new Retrofit.Builder()
-                    .baseUrl(ENDPOINT);
+                    .baseUrl(ENDPOINT)
+                    .addConverterFactory(MoshiConverterFactory.create());
 
             mirrorService = builder.build().create(MirrorService.class);
         }

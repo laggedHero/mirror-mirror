@@ -14,5 +14,5 @@ public interface MirrorService {
 
     @Multipart
     @POST("/mirror/photo")
-    Call<String> sendPhoto(@Part MultipartBody.Part photo);
+    Call<FeedbackMessage> sendPhoto(@Part MultipartBody.Part photo);
 }
